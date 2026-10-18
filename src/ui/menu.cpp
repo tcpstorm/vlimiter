@@ -47,8 +47,8 @@ namespace
 	const GUID kIID_ID3D11Texture2D = { 0x6f15aaf2, 0xd208, 0x4e89, { 0x9a, 0xb4, 0x48, 0x95, 0x35, 0xd3, 0x4f, 0x9c } };
 
 	constexpr UINT WM_VLIMITER_TOGGLE = WM_APP + 1;
-	constexpr int kWidth = 440;
-	constexpr int kHeight = 600;
+	constexpr int kWidth = 540;
+	constexpr int kHeight = 560;
 	constexpr DWORD kFrameMs = 33; // ~30 fps for the menu; it is a settings panel
 
 	HWND g_hwnd = nullptr;
@@ -431,8 +431,8 @@ namespace
 					ImGui::Text("Limiter held %.0f%% of frames, %.2f ms each on average", st.waitShare * 100.0, st.waitMs);
 				else
 					ImGui::TextDisabled("Limiter off: frames pass straight through.");
-				ImGui::TextDisabled("%s. %llu frames since start on render thread 0x%X.",
-					st.background ? "Background limit in force" : "Game has focus", (unsigned long long)st.calls, st.renderThread);
+				ImGui::TextDisabled("%s. %llu frames since start.",
+					st.background ? "Background limit in force" : "Game has focus", (unsigned long long)st.calls);
 			}
 			ImGui::TextDisabled(g_mouseSuspended ? "Camera locked while this window is open." : "Camera not locked (no raw mouse registration found).");
 			ImGui::TextDisabled("%s", vlimiter::update::Status());
@@ -463,7 +463,7 @@ namespace
 			if (!g_status.empty())
 				ImGui::TextWrapped("%s", g_status.c_str());
 
-			ImGui::TextDisabled("Changes apply to the next frame. Press the menu key again, or Close, to hide this window.");
+			ImGui::TextDisabled("Changes apply to the next frame. Menu key or Close hides this window.");
 		}
 		ImGui::End();
 	}

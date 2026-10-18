@@ -38,6 +38,8 @@ Press **F4** in-game for the menu. It floats over the game as its own small
 window; the camera is locked while it is open so the mouse does not move
 your view.
 
+![The VLimiter menu over the game](docs/media/menu.png)
+
 - **Limit frame rate** switches the cap on and off.
 - **FPS**: the cap while the game has focus. A slider covers 10 to 360
   (log scale, so the common values are easy to hit), the number field
@@ -117,14 +119,6 @@ Only Docker Desktop is needed; nothing else gets installed.
 Details, source layout, and how every fact the plugin relies on was
 verified are in `docs/development.md`. Versioning, releases, and the rules
 for changes to game hooks are in `CONTRIBUTING.md`.
-
-## Relation to VLights
-
-VLimiter is built on the same foundation as
-[VLights](https://github.com/tcpstorm/vlights): the same build, menu window,
-config and logging code, the same patched MinHook, and the same rules for
-what may be hooked under FiveM's anti-cheat. The two plugins are
-independent and can be installed together.
 
 ## Contributing and reports
 
