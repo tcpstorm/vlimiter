@@ -6,7 +6,7 @@
 // terminated the game about a minute after start, every time. So the plugin
 // owns a small top-level window with its own D3D11 device and swapchain and
 // renders Dear ImGui into that, exactly like ImGui's stock Win32 + DirectX 11
-// example. It floats over the (borderless) game window, takes its own input,
+// example, on a WARP device so ReShade ignores it (see CreateDevice). It floats over the (borderless) game window, takes its own input,
 // and touches nothing of the game's.
 //
 // Camera lock: the game reads the mouse through raw input registered for
@@ -162,20 +162,26 @@ namespace
 		sd.Windowed = TRUE;
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
+		// WARP (software) on purpose, not as a fallback. ReShade detours
+		// D3D11CreateDeviceAndSwapChain for the whole process and binds a full
+		// effect runtime to every swap chain it sees: with a hardware device
+		// here the menu window got ReShade's primary ReShade.ini, the game was
+		// pushed to ReShade3.ini, ReShade's overlay opened inside the menu, and
+		// the first present of the menu crashed one user's game. ReShade
+		// explicitly skips D3D_DRIVER_TYPE_WARP and D3D_DRIVER_TYPE_REFERENCE
+		// devices, and then skips the swap chain created on them (quirks.md).
+		// A 540x560 settings panel at 30 fps costs WARP a few ms of UI-thread
+		// CPU and nothing on the render thread.
 		D3D_FEATURE_LEVEL levels[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0 };
 		D3D_FEATURE_LEVEL got{};
-		HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, levels, 2,
+		HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, levels, 2,
 			D3D11_SDK_VERSION, &sd, &g_swapChain, &g_device, &got, &g_context);
 		if (FAILED(hr))
 		{
-			hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, 0, levels, 2,
-				D3D11_SDK_VERSION, &sd, &g_swapChain, &g_device, &got, &g_context);
-		}
-		if (FAILED(hr))
-		{
-			vlimiter::Log("menu: D3D11CreateDeviceAndSwapChain failed, hr=0x%08lX", (unsigned long)hr);
+			vlimiter::Log("menu: D3D11CreateDeviceAndSwapChain (WARP) failed, hr=0x%08lX", (unsigned long)hr);
 			return false;
 		}
+		vlimiter::Log("menu: D3D11 WARP device created (feature level 0x%X; software so ReShade and other swap chain hooks leave it alone)", (unsigned)got);
 		return CreateRenderTarget();
 	}
 
