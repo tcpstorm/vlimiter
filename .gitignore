@@ -67,3 +67,5 @@ scratch/
 !docs/media/*.gif
 __pycache__/
 *.pyc
+
+dist-test/

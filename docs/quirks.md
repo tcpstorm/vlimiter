@@ -24,6 +24,29 @@ executing at install time (limiter.md, "Installing while the render thread
 runs"). Not tried at all: hooking FiveM's heap-generated code, hooking
 inside Cfx DLLs, immediate-context calls on the game's device.
 
+## ReShade and the menu window
+
+ReShade (loaded by FiveM from `plugins/dxgi.dll`) detours
+`D3D11CreateDeviceAndSwapChain` for the whole process and binds a full
+effect runtime, with its own numbered ini, to every swap chain it sees.
+With a hardware device for the menu, the menu window was created before
+the game's swap chain and so received the primary `ReShade.ini`; the game
+was pushed to `ReShade3.ini` (VLights' menu took `ReShade2.ini`),
+ReShade's first-run tutorial and Home-key overlay opened inside the menu,
+and on one user's machine the menu's very first present (the line after
+`menu: camera locked` in the log) crashed the game.
+
+ReShade skips `D3D_DRIVER_TYPE_WARP` and `D3D_DRIVER_TYPE_REFERENCE`
+devices ("Skipping device because the driver type is ...") and then the
+swap chain created on them ("Skipping swap chain because it was created
+without a proxy Direct3D device"). The menu therefore always uses a WARP
+device. Signs it worked: the ReShade log carries both lines, no
+`ReShade2.ini` appears on a fresh start, and Home no longer opens ReShade
+inside the menu. ReShade's input detours (`RegisterRawInputDevices`,
+`PeekMessage`, `SetCursorPos`, `ClipCursor`) still see the menu's calls,
+unlike FiveM's IAT hooks, but with no runtime bound to the window they do
+nothing with them.
+
 ## FiveM's own frame pacing
 
 FiveM removes the game's OS yields around present ("present sleeper" is
