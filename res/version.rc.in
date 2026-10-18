@@ -1,0 +1,34 @@
+// version.rc.in - Windows VERSIONINFO for the .asi, filled in by CMake from
+// the VERSION file and the VLIMITER_AUTHOR / VLIMITER_URL cache variables. Shows up in the file's Properties > Details
+// tab and in Get-Item ... | % VersionInfo.
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    @VLIMITER_VER_MAJOR@,@VLIMITER_VER_MINOR@,@VLIMITER_VER_PATCH@,0
+ PRODUCTVERSION @VLIMITER_VER_MAJOR@,@VLIMITER_VER_MINOR@,@VLIMITER_VER_PATCH@,0
+ FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+ FILEFLAGS      0
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_DLL
+ FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "@VLIMITER_AUTHOR@\0"
+            VALUE "FileDescription",  "VLimiter - in-game frame rate limiter for FiveM\0"
+            VALUE "FileVersion",      "@VLIMITER_VERSION@\0"
+            VALUE "InternalName",     "VLimiter\0"
+            VALUE "LegalCopyright",   "Copyright (c) @VLIMITER_YEAR@ @VLIMITER_AUTHOR@\0"
+            VALUE "OriginalFilename", "VLimiter.asi\0"
+            VALUE "ProductName",      "VLimiter\0"
+            VALUE "ProductVersion",   "@VLIMITER_VERSION@\0"
+            VALUE "Comments",         "@VLIMITER_URL@\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

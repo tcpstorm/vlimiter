@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How to read the log, and what to try first
+    url: https://github.com/tcpstorm/vlimiter/blob/main/docs/diagnostics.md
+    about: The debug switch, what each log line means, and how to tell whether the limiter is running.
+  - name: How the limiter works
+    url: https://github.com/tcpstorm/vlimiter/blob/main/docs/limiter.md
+    about: The hook, the pacing policy, and what FiveM and the anti-cheat allow.
